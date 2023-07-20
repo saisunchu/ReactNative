@@ -1,0 +1,93 @@
+// How to implement react native push notifications
+
+// 1. Import Dependencies
+import messaging from '@react-native-firebase/messaging';
+
+import PushNotification from 'react-native-push-notification'; 
+import {Platform} from 'react-native'; 
+import PushNotificationIOS from '@react-native-community/push-notification-ios'; 
+
+import axios from "axios";
+
+// 2. Get Token
+messaging().getToken().then((token) => {
+    console.log('FCM token:', token);
+});
+
+// 3. Handling received notifications
+
+// React Native Push Notification Dependency usage
+const showNotification = ( notification ) => { 
+  PushNotification.localNotification({ 
+      channelId: "my-channel-id", // ID of the channel to use
+      title: notification.title, 
+      message: notification.body, 
+  }); 
+}; 
+
+// 3.1. Forground Listener 
+messaging().onMessage(response => { 
+
+        console.log(JSON.stringify(response));
+        if (Platform.OS !== 'ios') { 
+            showNotification(response.notification); 
+            return; 
+        } 
+        PushNotificationIOS.requestPermissions().then(() => 
+            showNotification(response.notification), 
+        ); 
+}); 
+
+// 3.2 Background Listner
+messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+      console.log('Background message received:', remoteMessage);
+      // Process the message and update the UI or perform other actions
+
+      if (Platform.OS !== 'ios') { 
+        showNotification(response.notification); 
+        return; 
+      } 
+      PushNotificationIOS.requestPermissions().then(() => 
+          showNotification(response.notification), 
+      ); 
+
+});
+
+// 4 Push Notification Call, call below Fn in any component 
+
+const data = {
+    to: 'eNMagnVYSEy_dMJ5mERjDD:APA91bHwOVYq96CN-etEY7p-ZaEGsy0idWMq6dlhndCZqI3ifrmLJkJeH8WfhTdxPGT2dpGP_yxbrAC1_yrqP9fOb_rhax1RtzxpJ8LKlF9nLX0Eno2r81-jF2Hrx04NPsYolEAdE-Mo',
+    notification: {
+      title: 'Six',
+      body: 'seven '
+    }
+  };
+const PushNot = () =>
+{
+  console.log('Inside PushNot');
+  axios.post('https://fcm.googleapis.com/fcm/send', data, {
+    headers: {
+      Authorization: 'key=AAAAS16eIb4:APA91bGHAheMFW-2GTC9O5f355U2aTplgYRzEwftJjJZRHnr-7S-nJ24TSO1xeb3ai7C_TN2GjRHaNno2AGAcQJeOSYi3Qh8cO0pG1Va1rhpie6wqE7Eb_zDiWE0BA_GrXt7IUGYzv_U',
+      'Content-Type': 'application/json'
+    }
+  }).then(response => {
+    console.log('Notification sent:', response.data);
+  }).catch(error => {
+    console.error('Notification error:', error);
+  });
+
+}
+
+// 5. Create channel
+PushNotification.createChannel(
+      {
+        channelId: "my-channel-id", // ID of the channel
+        channelName: "My Channel", // Name of the channel
+        channelDescription: "My channel description", // Description of the channel
+        playSound: true, // Enable sound
+        soundName: "default", // Sound to play when notification is received
+        importance: 4, // Importance of the notification (0-4)
+        vibrate: true, // Enable vibration
+      },
+      (created) => console.log(`Channel created: ${created}`) // Callback when channel is created
+);

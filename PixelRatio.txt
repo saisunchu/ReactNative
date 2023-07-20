@@ -1,0 +1,65 @@
+You can use PixelRatio
+
+For example:
+
+var React = require('react-native');
+
+var {StyleSheet, PixelRatio} = React;
+
+var FONT_BACK_LABEL   = 18;
+
+if (PixelRatio.get() <= 2) {
+  FONT_BACK_LABEL = 14;
+}
+
+var styles = StyleSheet.create({
+  label: {
+    fontSize: FONT_BACK_LABEL
+  }
+});
+Edit:
+
+Another example:
+
+import { Dimensions, Platform, PixelRatio } from 'react-native';
+
+const {
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+// based on iphone 5s's scale
+const scale = SCREEN_WIDTH / 320;
+
+export function normalize(size) {
+  const newSize = size * scale 
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
+Usage:
+
+fontSize: normalize(24)
+You can go one step further by allowing sizes to be used on every <Text /> components by pre-defined sized.
+
+Example:
+
+const styles = {
+  mini: {
+    fontSize: normalize(12),
+  },
+  small: {
+    fontSize: normalize(15),
+  },
+  medium: {
+    fontSize: normalize(17),
+  },
+  large: {
+    fontSize: normalize(20),
+  },
+  xlarge: {
+    fontSize: normalize(24),
+  },
+};

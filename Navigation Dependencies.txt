@@ -1,0 +1,13 @@
+Contact = () => {
+        const { navigate } = this.props.navigation;
+        navigate('Contact', {
+            data: 'John Doe',
+            onCallback: this.onCallback
+        })
+    }
+
+
+
+npm i @react-navigation/stack react-native-gesture-handler react-native-screens react-native-safe-area-context
+
+npm i react-native-vector-icons
