@@ -1,0 +1,14 @@
+npm i react-native-image-crop-picker
+
+In Info.plist / 
+<key>NSCameraUsageDescription</key>
+<string>camera</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string></string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>gallary</string>
+<key>UIAppFonts</key>
+
+
+
+
