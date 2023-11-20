@@ -1,0 +1,2 @@
+  pod 'RNFBFirestore', :path => '../node_modules/@react-native-firebase/firestore'
+  pod 'RNImageCropPicker', :path =>  '../node_modules/react-native-image-crop-picker'
